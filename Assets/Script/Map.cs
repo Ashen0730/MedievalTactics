@@ -32,6 +32,13 @@ public class Map : MonoBehaviour {
 	List<Tile> highlightedMoveTiles = new List<Tile>();
 	List<Tile> highlightedAttackTiles = new List<Tile>();
 
+	public Button button; //button instance
+	public bool playerTurn = true; //boolean value used for determining player turn
+
+	//lists of ally and enemy units
+	public List<GameObject> unitsAlly = new List<GameObject> (10);
+	public List<GameObject> unitsEnemy = new List<GameObject> (10);
+
 	//public Unit FocusedUnit
 	//{
 	//	get { return UnitContainer.GetComponentsInChildren<Unit>().FirstOrDefault(x => x.isFocused);}
@@ -46,6 +53,14 @@ public class Map : MonoBehaviour {
 		unit.transform.position = tiles.First (c => c.X == x && c.Y == y).transform.position;
 		unit.x = x;
 		unit.y = y;
+
+		//if the current unit being placed is an enemy adds it to the enemy list
+		if (isEnemy) {
+			unitsEnemy.Add (unit.gameObject);
+		} else {
+			//adds to the ally list
+			unitsAlly.Add (unit.gameObject);
+		}
 
 	}
 
@@ -63,8 +78,7 @@ public class Map : MonoBehaviour {
 	public void AttackTo(Unit fromUnit, Unit toUnit)
 	{
 		toUnit.loseHealth (fromUnit.ATK);
-		//FocusedUnit.isMoved = true;
-		toUnit.isDead();
+		FocusedUnit.isMoved = true;
 	}
 
 	public void highlightAttackable(int range, int x, int y){
@@ -195,6 +209,38 @@ public class Map : MonoBehaviour {
 //		else{
 //			movesLefttxt.text=" ";
 //		}
+
+	}
+
+	//method that switches the turn by disabling one sides buttons and re-enabling the other sides buttons
+	public void OnClick() {
+		print(unitsAlly.Count+ " units in list");
+		if (playerTurn) {
+			//switches the allies button
+			for (int i = 0; i < unitsAlly.Count; i++) {
+				button = unitsAlly[i].GetComponent<Button> ();
+				button.enabled = !button.enabled;
+				print ("button disabled");
+			}
+			//switches the enemies button
+			for (int i = 0; i < unitsEnemy.Count; i++) {
+				button = unitsEnemy[i].GetComponent<Button> ();
+				button.enabled = !button.enabled;
+			}
+
+		} else {
+			for (int i = 0; i < unitsEnemy.Count; i++) {
+				button = unitsEnemy[i].GetComponent<Button> ();
+				button.enabled = !button.enabled;
+			}
+			for (int i = 0; i < unitsAlly.Count; i++) {
+				button = unitsAlly[i].GetComponent<Button> ();
+				button.enabled = !button.enabled;
+				print ("button disabled");
+			}
+		}
+		playerTurn = !playerTurn; //
+		print("It is " + playerTurn + " that it is the player's turn");
 	}
 
 	public class Coordinate{
