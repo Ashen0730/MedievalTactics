@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Manager : MonoBehaviour {
 
@@ -22,6 +23,8 @@ public class Manager : MonoBehaviour {
 	Obstacles RockPrefab;
 	[SerializeField]
 	Obstacles TreePrefab;
+
+	private Button button; //button instance
 
 	// Use this for initialization
 	IEnumerator Start () {
@@ -45,10 +48,12 @@ public class Manager : MonoBehaviour {
 		map.PutUnit (19, 6, EnemyArcherPrefab, true);
 		map.PutUnit (18, 5, EnemySwordmanPrefab, true);
 		map.PutUnit (18, 6, EnemySwordmanPrefab, true);
+
+		//Sets the enemy sides 
+		for (int i = 0; i < map.unitsEnemy.Count; i++) {
+			button = map.unitsEnemy[i].GetComponent<Button> ();
+			button.enabled = !button.enabled;
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
 		
-	}
 }
