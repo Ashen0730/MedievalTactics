@@ -19,6 +19,7 @@ public class Unit : MonoBehaviour {
 	public bool isFocused;
 	public bool hasBetrayed;
 	public bool isMoved = false;
+	public bool hasAttacked=false;
 	//public bool tileSelected = false;
 
 	[SerializeField]
@@ -29,10 +30,15 @@ public class Unit : MonoBehaviour {
 		if (map.FocusedUnit == null) {
 			print ("selecting unit");
 			map.FocusedUnit = this;
+
+			if(!map.FocusedUnit.isMoved||!map.FocusedUnit.hasAttacked){
 			//if the focused unit has not been moved then...
-			if (!map.FocusedUnit.isMoved) {
-				map.highlightMovable (map.FocusedUnit.move + map.GetTile (x, y).cost, map.FocusedUnit.x, map.FocusedUnit.y);
-				map.highlightAttackable (map.FocusedUnit.range, map.FocusedUnit.x, map.FocusedUnit.y);
+				if (!map.FocusedUnit.isMoved) {
+					map.highlightMovable (map.FocusedUnit.move + map.GetTile (x, y).cost, map.FocusedUnit.x, map.FocusedUnit.y);
+				//if the focused unit has not attacked then...
+				}if (!map.FocusedUnit.hasAttacked) {
+						map.highlightAttackable (map.FocusedUnit.range, map.FocusedUnit.x, map.FocusedUnit.y);
+				}
 			} else { //if the unit has been moved, deselects it
 				print("deselecting");
 				map.FocusedUnit = null;
@@ -44,7 +50,7 @@ public class Unit : MonoBehaviour {
 			map.clearHighlightAttack ();
 		} else {
 
-			if (map.GetUnit (map.FocusedUnit.x, map.FocusedUnit.y).isEnemy != this.isEnemy && map.GetTile(this.x, this.y).IsAttackable) {
+			if (map.GetUnit (map.FocusedUnit.x, map.FocusedUnit.y).isEnemy != this.isEnemy && map.GetTile(this.x, this.y).IsAttackable&&!map.FocusedUnit.hasAttacked) {
 				print (map.FocusedUnit.name + " attacking to " + this.name);
 				print (this.health + "current");
 				map.AttackTo (map.GetUnit (map.FocusedUnit.x, map.FocusedUnit.y), this);
@@ -53,7 +59,7 @@ public class Unit : MonoBehaviour {
 				map.clearHighlightMove ();
 				map.FocusedUnit = null;
 			} else {
-				print ("cant attack your team");
+				print ("cant attack");
 			}
 		}
 
@@ -153,7 +159,6 @@ public class Unit : MonoBehaviour {
 		
 
 	public void moveUnit(Tile destination, Unit focused){
-		print ("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 		if((destination.X==(focused.x+1)||destination.X==(focused.x-1))&&(destination.Y==(focused.y+1)||destination.Y==(focused.y-1))){
 			focused.x = destination.X;
 			focused.y = destination.Y;
@@ -190,9 +195,5 @@ public class Unit : MonoBehaviour {
 			isMoved = true;
 			movesCount = 0;
 		}
-	}
-
-	public int getMovesCount(){
-		return movesCount;
 	}
 }
