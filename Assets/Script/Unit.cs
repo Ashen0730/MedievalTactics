@@ -31,7 +31,7 @@ public class Unit : MonoBehaviour {
 			print ("selecting unit");
 			map.FocusedUnit = this;
 
-			if(!map.FocusedUnit.isMoved||!map.FocusedUnit.hasAttacked){
+			if(!map.FocusedUnit.hasAttacked){
 			//if the focused unit has not been moved then...
 				if (!map.FocusedUnit.isMoved) {
 					map.highlightMovable (map.FocusedUnit.move + map.GetTile (x, y).cost, map.FocusedUnit.x, map.FocusedUnit.y);
