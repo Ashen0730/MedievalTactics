@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,6 +49,7 @@ public class Unit : MonoBehaviour {
 				print (this.health + "current");
 				map.AttackTo (map.GetUnit (map.FocusedUnit.x, map.FocusedUnit.y), this);
 				print (this.health);
+				map.GetUnit (map.FocusedUnit.x, map.FocusedUnit.y).discolor ();
 				map.clearHighlightAttack ();
 				map.clearHighlightMove ();
 				map.FocusedUnit = null;
@@ -76,6 +77,15 @@ public class Unit : MonoBehaviour {
 
 	}
 
+	public void discolor(){
+		var image = GetComponent<Image> ();
+		image.color = new Color (0.4f, 0.4f, 0.4f);
+	}
+
+	public void recolor(){
+		var image = GetComponent<Image> ();
+		image.color = new Color (1.0f, 1.0f, 1.0f);
+  }
 	public virtual void betray(){
 
 	}
